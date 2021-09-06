@@ -2,25 +2,11 @@ import { config } from '@keystone-next/keystone/schema';
 import { statelessSessions } from '@keystone-next/keystone/session';
 import { createAuth } from '@keystone-next/auth';
 import { lists } from './schema';
-import dotenv from "dotenv";
+import { getValidatedEnv } from "./validateEnvironment";
 
-if (process.env.NODE_ENV !== 'production') {
-  dotenv.config();
-}
+const env = getValidatedEnv();
 
 let sessionMaxAge = 60 * 60 * 24 * 30; // 30 days
-let sessionSecret = process.env.SESSION_SECRET;
-let databaseUrl = process.env.DATABASE_URL;
-
-if (!sessionSecret) {
-  throw new Error(
-    'The SESSION_SECRET environment variable must be set'
-  );
-} else if (!databaseUrl) {
-  throw new Error(
-    'The DATABASE_URL environment variable must be set'
-  )
-}
 
 const { withAuth } = createAuth({
   listKey: 'User',
@@ -34,14 +20,14 @@ const { withAuth } = createAuth({
 
 const session = statelessSessions({
   maxAge: sessionMaxAge,
-  secret: sessionSecret,
+  secret: process.env.SESSION_SECRET,
 });
 
 export default withAuth(
   config({
     db: {
       adapter: 'prisma_postgresql',
-      url: process.env.DATABASE_URL || '',
+      url: process.env.DATABASE_URL || 'postgres://tbxlrqaw:IJ_FevSavdDCP5K3AystdFJL_f2HdVVD@surus.db.elephantsql.com/tbxlrqaw',
     },
     ui: {
       isAccessAllowed: (context) => !!context.session?.data,
