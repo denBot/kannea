@@ -1,7 +1,7 @@
 import { config } from '@keystone-next/keystone/schema';
 import { statelessSessions } from '@keystone-next/keystone/session';
 import { createAuth } from '@keystone-next/auth';
-import { lists } from './schema';
+import { lists } from './schemas';
 import { getValidatedEnv } from "./utils/validateEnvironment";
 
 const env = getValidatedEnv();
