@@ -2,7 +2,7 @@ import { config } from '@keystone-next/keystone/schema';
 import { statelessSessions } from '@keystone-next/keystone/session';
 import { createAuth } from '@keystone-next/auth';
 import { lists } from './schema';
-import { getValidatedEnv } from "./validateEnvironment";
+import { getValidatedEnv } from "./utils/validateEnvironment";
 
 const env = getValidatedEnv();
 
@@ -18,21 +18,23 @@ const { withAuth } = createAuth({
   },
 });
 
-const session = statelessSessions({
-  maxAge: sessionMaxAge,
-  secret: process.env.SESSION_SECRET,
-});
-
 export default withAuth(
   config({
     db: {
       adapter: 'prisma_postgresql',
-      url: process.env.DATABASE_URL || 'postgres://tbxlrqaw:IJ_FevSavdDCP5K3AystdFJL_f2HdVVD@surus.db.elephantsql.com/tbxlrqaw',
+      url: env.DATABASE_URL,
     },
     ui: {
       isAccessAllowed: (context) => !!context.session?.data,
     },
     lists,
-    session,
+    session: statelessSessions({
+      maxAge: sessionMaxAge,
+      secret: env.SESSION_SECRET,
+    }),
+    server: {
+      port: env.SERVER_PORT,
+      maxFileSize: env.MAX_FILESIZE_MB * 1024 * 1024
+    }
   })
 );

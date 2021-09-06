@@ -12,6 +12,7 @@ export const getValidatedEnv = () => {
         SESSION_SECRET: Joi.string().required(),
         DATABASE_URL: Joi.string().required(),
         SERVER_PORT: Joi.number().port().default(3000),
+        MAX_FILESIZE_MB: Joi.number().default(200),
     })
     .unknown();
   
