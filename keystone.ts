@@ -8,15 +8,19 @@ if (process.env.NODE_ENV !== 'production') {
   dotenv.config();
 }
 
+let sessionMaxAge = 60 * 60 * 24 * 30; // 30 days
 let sessionSecret = process.env.SESSION_SECRET;
+let databaseUrl = process.env.DATABASE_URL;
 
 if (!sessionSecret) {
   throw new Error(
     'The SESSION_SECRET environment variable must be set'
   );
+} else if (!databaseUrl) {
+  throw new Error(
+    'The DATABASE_URL environment variable must be set'
+  )
 }
-
-let sessionMaxAge = 60 * 60 * 24 * 30; // 30 days
 
 const { withAuth } = createAuth({
   listKey: 'User',
