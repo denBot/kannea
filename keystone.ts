@@ -11,13 +11,9 @@ if (process.env.NODE_ENV !== 'production') {
 let sessionSecret = process.env.SESSION_SECRET;
 
 if (!sessionSecret) {
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error(
-      'The SESSION_SECRET environment variable must be set in production'
-    );
-  } else {
-    sessionSecret = '-- DEV COOKIE SECRET; CHANGE ME --';
-  }
+  throw new Error(
+    'The SESSION_SECRET environment variable must be set'
+  );
 }
 
 let sessionMaxAge = 60 * 60 * 24 * 30; // 30 days
